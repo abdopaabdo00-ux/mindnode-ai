@@ -56,8 +56,7 @@ export const ChatInput = ({ value, onChange, onSend, isLoading, textareaRef }: C
         </div>
 
         <textarea
-          ref={textareaRef}
-          rows={1}
+          ref={textareaRef as React.Ref<HTMLTextAreaElement>}
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
