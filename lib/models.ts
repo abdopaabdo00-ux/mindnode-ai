@@ -4,6 +4,8 @@ export interface ModelConfig {
   provider: 'groq' | 'gemini' | 'openrouter';
   modelId: string;
   category: string;
+  icon: string;
+  description?: string;
 }
 
 export const AVAILABLE_MODELS: ModelConfig[] = [
@@ -13,6 +15,8 @@ export const AVAILABLE_MODELS: ModelConfig[] = [
     provider: 'groq',
     modelId: 'llama-3.3-70b-versatile',
     category: 'عام',
+    icon: '⚡',
+    description: 'نموذج خارق وسريع للمهام العامة'
   },
   {
     id: 'groq-llama31',
@@ -20,6 +24,8 @@ export const AVAILABLE_MODELS: ModelConfig[] = [
     provider: 'groq',
     modelId: 'llama-3.1-8b-instant',
     category: 'برمجة',
+    icon: '💻',
+    description: 'استجابة فائقة السرعة للأكواد والبرمجة'
   },
   {
     id: 'gemini-flash',
@@ -27,6 +33,8 @@ export const AVAILABLE_MODELS: ModelConfig[] = [
     provider: 'gemini',
     modelId: 'gemini-1.5-flash',
     category: 'تحليل',
+    icon: '🧠',
+    description: 'ممتاز في التحليل والنصوص الطويلة'
   },
   {
     id: 'openrouter-mistral',
@@ -34,6 +42,8 @@ export const AVAILABLE_MODELS: ModelConfig[] = [
     provider: 'openrouter',
     modelId: 'mistralai/mistral-nemo',
     category: 'إبداعي',
+    icon: '🎨',
+    description: 'مخصص للكتابة والمحتوى الإبداعي'
   },
 ];
 
