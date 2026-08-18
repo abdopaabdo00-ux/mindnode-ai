@@ -1,112 +1,55 @@
-export interface AIModel {
+export interface ModelConfig {
   id: string;
   name: string;
-  provider: 'openrouter' | 'groq' | 'gemini';
+  provider: 'groq' | 'gemini' | 'openrouter';
   modelId: string;
-  category: string[];
-  description: string;
-  icon: string;
-  free: boolean;
+  category: string;
 }
 
-export const AVAILABLE_MODELS: AIModel[] = [
+export const AVAILABLE_MODELS: ModelConfig[] = [
   {
-    id: 'llama-3-1-8b',
-    name: 'Llama 3.1 8B',
+    id: 'groq-llama33',
+    name: 'Llama 3.3 70B (Groq)',
     provider: 'groq',
-    modelId: 'llama-3.1-8b-instant',
-    category: ['عام', 'برمجة', 'سرعة'],
-    description: 'أفضل نموذج للسرعة الفائقة والردود الفورية',
-    icon: '⚡',
-    free: true,
+    modelId: 'llama-3.3-70b-versatile',
+    category: 'عام',
   },
   {
-    id: 'mixtral-8x7b',
-    name: 'Mixtral 8x7B',
+    id: 'groq-llama31',
+    name: 'Llama 3.1 8B (Groq)',
     provider: 'groq',
-    modelId: 'mixtral-8x7b-32768',
-    category: ['عام', 'تحليل', 'رياضيات'],
-    description: 'نموذج قوي للمهام المعقدة والتحليل العميق',
-    icon: '🧠',
-    free: true,
+    modelId: 'llama-3.1-8b-instant',
+    category: 'برمجة',
   },
   {
     id: 'gemini-flash',
     name: 'Gemini 1.5 Flash',
     provider: 'gemini',
     modelId: 'gemini-1.5-flash',
-    category: ['عام', 'صور', 'ترجمة', 'تلخيص'],
-    description: 'سريع ومجاني من Google للمهام المتنوعة',
-    icon: '🔥',
-    free: true,
+    category: 'تحليل',
   },
   {
-    id: 'gemini-pro',
-    name: 'Gemini 1.5 Pro',
-    provider: 'gemini',
-    modelId: 'gemini-1.5-pro',
-    category: ['عام', 'برمجة', 'تفكير', 'تحليل'],
-    description: 'الأقوى من Google للبرمجة والتفكير المعقد',
-    icon: '🌟',
-    free: true,
-  },
-  {
-    id: 'mistral-nemo',
-    name: 'Mistral Nemo',
+    id: 'openrouter-mistral',
+    name: 'Mistral Nemo (OpenRouter)',
     provider: 'openrouter',
     modelId: 'mistralai/mistral-nemo',
-    category: ['عام', 'برمجة', 'محادثة'],
-    description: 'نموذج مجاني قوي من Mistral عبر OpenRouter',
-    icon: '🌊',
-    free: true,
-  },
-  {
-    id: 'llama-3-70b',
-    name: 'Llama 3 70B',
-    provider: 'openrouter',
-    modelId: 'meta-llama/llama-3-70b-instruct',
-    category: ['عام', 'برمجة', 'كتابة', 'تحليل'],
-    description: 'أقوى نموذج مجاني متاح للجميع',
-    icon: '🦙',
-    free: true,
+    category: 'إبداعي',
   },
 ];
 
 export const CATEGORY_MAP: Record<string, string[]> = {
-  'صور': ['gemini-flash', 'gemini-pro'],
-  'برمجة': ['gemini-pro', 'llama-3-70b', 'llama-3-1-8b', 'mixtral-8x7b'],
-  'ترجمة': ['gemini-flash', 'mistral-nemo'],
-  'تلخيص': ['gemini-flash', 'mixtral-8x7b'],
-  'رياضيات': ['mixtral-8x7b', 'gemini-pro'],
-  'كتابة': ['llama-3-70b', 'gemini-pro'],
-  'تحليل': ['mixtral-8x7b', 'gemini-pro'],
-  'عام': ['llama-3-1-8b', 'gemini-flash', 'mistral-nemo'],
+  'عام': ['groq-llama33', 'gemini-flash'],
+  'برمجة': ['groq-llama31', 'groq-llama33'],
+  'تحليل': ['gemini-flash', 'groq-llama33'],
+  'إبداعي': ['openrouter-mistral', 'groq-llama33'],
 };
 
-export function detectCategory(question: string): string {
-  const q = question.toLowerCase();
-  
-  if (q.includes('صور') || q.includes('صورة') || q.includes('رسم') || q.includes('generate image') || q.includes('draw')) {
-    return 'صور';
-  }
-  if (q.includes('كود') || q.includes('برمج') || q.includes('python') || q.includes('javascript') || q.includes('code') || q.includes('طور') || q.includes('bug')) {
-    return 'برمجة';
-  }
-  if (q.includes('ترجم') || q.includes('translate') || q.includes('من انجليزي') || q.includes('من عربي')) {
-    return 'ترجمة';
-  }
-  if (q.includes('لخص') || q.includes('ملخص') || q.includes('summarize')) {
-    return 'تلخيص';
-  }
-  if (q.includes('رياضيات') || q.includes('حساب') || q.includes('معادلة') || q.includes('math') || q.includes('احسب') || q.includes('يساوي')) {
-    return 'رياضيات';
-  }
-  if (q.includes('اكتب') || q.includes('مقال') || q.includes('قصة') || q.includes('نص') || q.includes('write')) {
-    return 'كتابة';
-  }
-  if (q.includes('حلل') || q.includes('لماذا') || q.includes('اشرح') || q.includes('فسر') || q.includes('تحليل')) {
-    return 'تحليل';
-  }
-  
+export function detectCategory(text: string): string {
+  const codeKeywords = ['code', 'function', 'class', 'const', 'let', 'var', 'برمجة', 'كود', 'دالة', 'خطأ'];
+  if (codeKeywords.some(kw => text.toLowerCase().includes(kw))) return 'برمجة';
+
+  const analysisKeywords = ['حلل', 'ملخص', 'مقارنة', 'جدول', 'بيانات'];
+  if (analysisKeywords.some(kw => text.toLowerCase().includes(kw))) return 'تحليل';
+
   return 'عام';
 }
